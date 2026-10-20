@@ -1,0 +1,11 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Dependencies allowed (true) or explicitly not allowed (false) to run install
+# scripts; pnpm blocks all others.
+allowBuilds:
+  unrs-resolver: true
+  # sharp ships prebuilt binaries for supported platforms; its script is only
+  # a from-source fallback.
+  sharp: false

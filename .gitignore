@@ -1,0 +1,21 @@
+node_modules/
+.next/
+out/
+.turbo/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+next-env.d.ts
+.env*
+!.env.example
+# Public, non-secret site configuration (shipped in the static HTML anyway).
+!apps/web/.env
+.DS_Store
+
+# Local AI-tool state (not part of the project)
+.agents/
+.aider-desk/
+.claude/*
+!.claude/launch.json
+skills-lock.json

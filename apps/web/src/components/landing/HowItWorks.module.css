@@ -1,0 +1,288 @@
+/*
+ * "How Rooffur Works" journey animation.
+ *
+ * Base styles ARE the final state, so without JavaScript or with
+ * prefers-reduced-motion everything is simply shown complete.
+ * JourneyAnimator sets data-journey="ready" (start state) and then "play"
+ * once the journey enters the viewport. Every animation runs once with
+ * fill-mode `both` and never loops. Step text is never hidden or faded —
+ * only decorative parts (line, paws, node rings, icons) animate.
+ *
+ * Each step sets --d (ms) = when the line reaches it. The line starts at
+ * 200ms and takes 4000ms (one step per second) — keep in sync with
+ * LINE_START / STEP_GAP in HowItWorks.tsx.
+ */
+
+/* ---------- Rail: track, amber fill, travelling paw, paw trail ---------- */
+
+.fill {
+  transform-origin: top;
+}
+
+.runner {
+  opacity: 0;
+  top: 100%;
+}
+
+@media (min-width: 1024px) {
+  .fill {
+    transform-origin: left;
+  }
+
+  .runner {
+    top: 0;
+    left: 100%;
+  }
+}
+
+/* ---------- Nodes ---------- */
+
+.node::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  border: 2px solid var(--amber-400);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.joinBubble,
+.discoverDots > span,
+.meetHand {
+  opacity: 1;
+}
+
+.shareRipple {
+  opacity: 0;
+}
+
+.heart path {
+  fill: var(--amber-400);
+}
+
+/* ---------- Animations (motion allowed only) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .journey[data-journey="play"] .fill {
+    animation: fill-y 4000ms linear 200ms both;
+  }
+
+  .journey[data-journey="play"] .runner {
+    animation: run-y 4000ms linear 200ms both;
+  }
+
+  @media (min-width: 1024px) {
+    .journey[data-journey="play"] .fill {
+      animation-name: fill-x;
+    }
+
+    .journey[data-journey="play"] .runner {
+      animation-name: run-x;
+    }
+  }
+
+  .journey[data-journey="play"] .trailPaw {
+    animation: fade-in 450ms ease-out var(--d) both;
+  }
+
+  .journey[data-journey="play"] .node {
+    animation: node-on 550ms var(--ease-standard) var(--d) both;
+  }
+
+  .journey[data-journey="play"] .node::after {
+    animation: ring 1000ms ease-out var(--d) both;
+  }
+
+  /* 01 Join — chat icon pops in, a second bubble appears behind it */
+  .journey[data-journey="play"] .joinIcon {
+    animation: pop 570ms var(--ease-standard) var(--d) both;
+  }
+
+  .journey[data-journey="play"] .joinBubble {
+    animation: bubble-in 480ms ease-out calc(var(--d) + 250ms) both;
+  }
+
+  /* 02 Share — pin drops into its circle, one ripple */
+  .journey[data-journey="play"] .shareIcon {
+    animation: drop 570ms var(--ease-standard) var(--d) both;
+  }
+
+  .journey[data-journey="play"] .shareRipple {
+    animation: ripple 1050ms ease-out calc(var(--d) + 400ms) both;
+  }
+
+  /* 03 Discover — magnifier sweeps once, a few dots appear behind it */
+  .journey[data-journey="play"] .discoverIcon {
+    animation: sweep 700ms ease-in-out var(--d) both;
+  }
+
+  .journey[data-journey="play"] .discoverDots > span {
+    animation: fade-in 300ms ease-out calc(var(--d) + 200ms + var(--i) * 120ms) both;
+  }
+
+  /* 04 Meet — person and pet move together, then the handshake appears */
+  .journey[data-journey="play"] .meetLeft {
+    animation: from-left 700ms var(--ease-standard) var(--d) both;
+  }
+
+  .journey[data-journey="play"] .meetRight {
+    animation: from-right 700ms var(--ease-standard) var(--d) both;
+  }
+
+  .journey[data-journey="play"] .meetHand {
+    animation: hand-in 450ms ease-out calc(var(--d) + 600ms) both;
+  }
+
+  /* 05 Decide — the heart fills with amber and pulses once */
+  .journey[data-journey="play"] .heart path {
+    animation: heart-fill 450ms ease-out var(--d) both;
+  }
+
+  .journey[data-journey="play"] .heart {
+    animation: pulse 600ms ease-in-out calc(var(--d) + 400ms) both;
+  }
+}
+
+@keyframes fill-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes fill-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes run-y {
+  from {
+    top: 0%;
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  to {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes run-x {
+  from {
+    left: 0%;
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  to {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes node-on {
+  from {
+    transform: scale(0.88);
+    border-color: var(--neutral-200);
+    color: var(--neutral-400);
+  }
+}
+
+@keyframes ring {
+  from {
+    opacity: 0.8;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.8);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translate(-4px, 4px) scale(0.7);
+  }
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(1px);
+  }
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.55;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-5px) rotate(-8deg);
+  }
+  60% {
+    transform: translateX(4px) rotate(6deg);
+  }
+}
+
+@keyframes from-left {
+  from {
+    transform: translateX(-12px);
+  }
+}
+
+@keyframes from-right {
+  from {
+    transform: translateX(12px);
+  }
+}
+
+@keyframes hand-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes heart-fill {
+  from {
+    fill: transparent;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.15);
+  }
+}

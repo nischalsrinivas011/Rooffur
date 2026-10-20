@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+docs/
+.claude/
+.agents/
+.aider-desk/
+skills-lock.json

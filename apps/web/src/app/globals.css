@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@import "@rooffur/ui/tokens.css";
+
+@layer base {
+  html {
+    /*
+     * Anchor targets (e.g. #how-it-works) land exactly below the sticky header.
+     * Sections provide their own top padding, and an exact offset means a
+     * hero above the target has fully passed, so the header turns solid.
+     */
+    scroll-padding-top: var(--header-height);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--white);
+    color: var(--neutral-700);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--amber-500);
+    outline-offset: 2px;
+  }
+}
+
+/* Mobile navigation drawer motion (Radix exposes data-state). */
+@media (prefers-reduced-motion: no-preference) {
+  .drawer-overlay[data-state="open"] {
+    animation: drawer-fade-in var(--transition-base);
+  }
+  .drawer-overlay[data-state="closed"] {
+    animation: drawer-fade-out var(--transition-fast);
+  }
+  .drawer-panel[data-state="open"] {
+    animation: drawer-slide-in var(--transition-base);
+  }
+  .drawer-panel[data-state="closed"] {
+    animation: drawer-slide-out var(--transition-fast);
+  }
+}
+
+/* Dialog (Watermelon UI dialog, CSS instead of its motion library). */
+@media (prefers-reduced-motion: no-preference) {
+  .dialog-overlay[data-state="open"] {
+    animation: drawer-fade-in var(--transition-base);
+  }
+  .dialog-content[data-state="open"] {
+    animation: dialog-in var(--transition-base);
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+/* FAQ accordion: animate opening only (closed content is display:none). */
+@media (prefers-reduced-motion: no-preference) {
+  .accordion-content[data-state="open"] {
+    animation: accordion-down var(--transition-base);
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes drawer-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes drawer-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+}
+@keyframes drawer-slide-out {
+  to {
+    transform: translateX(-100%);
+  }
+}
